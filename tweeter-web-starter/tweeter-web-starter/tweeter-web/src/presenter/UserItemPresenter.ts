@@ -9,28 +9,23 @@ export abstract class UserItemPresenter {
     private _hasMoreItems = true 
     private _lastItem: User | null = null;
     private _view: UserItemView
-
-    reset() {
-        this._lastItem = null
-        this._hasMoreItems = true
-    }
-
+    
     protected constructor(view: UserItemView) {
         this._view = view
     }
-
+    
     public get hasMoreItems() {
         return this._hasMoreItems
     }
-
+    
     protected set hasMoreItems(value: boolean) {
         this._hasMoreItems = value
     }
-
+    
     protected get lastItem() {
         return this._lastItem;
     }
-
+    
     protected set lastItem(value: User | null) {
         this._lastItem = value
     }
@@ -38,6 +33,11 @@ export abstract class UserItemPresenter {
     protected get view() {
         return this._view
     }
-
+    
+    reset() {
+        this._lastItem = null
+        this._hasMoreItems = true
+    }
+    
     public abstract loadMoreItems(authToken: AuthToken, userAlias: string): void
 }

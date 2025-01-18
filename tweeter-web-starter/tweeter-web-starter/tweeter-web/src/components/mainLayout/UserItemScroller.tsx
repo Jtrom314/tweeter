@@ -1,10 +1,9 @@
-import { AuthToken, User } from "tweeter-shared";
+import { User } from "tweeter-shared";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UserItem from "../userItem/UserItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useUserInfo from "../userInfo/UserInfoHook";
-import { FolloweePresenter } from "../../presenter/FolloweePresenter";
 import { UserItemPresenter, UserItemView } from "../../presenter/UserItemPresenter";
 
 export const PAGE_SIZE = 10;
