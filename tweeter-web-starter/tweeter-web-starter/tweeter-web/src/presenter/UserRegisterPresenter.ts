@@ -9,34 +9,17 @@ export interface UserRegisterView {
     navigate: NavigateFunction,
     setImageUrl: React.Dispatch<React.SetStateAction<string>>,
     setImageFileExtension:  React.Dispatch<React.SetStateAction<string>>,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export class UserRegisterPresenter {
     private userService: UserService;
     private view: UserRegisterView
-    private _rememberMe: boolean = false
-    private _isLoading: boolean = false
     private _imageBytes: Uint8Array = new Uint8Array();
 
     public constructor(view: UserRegisterView) {
         this.view = view
         this.userService = new UserService
-    }
-
-    public get rememberMe() {
-        return this._rememberMe
-    }
-
-    public set rememberMe(value: boolean) {
-        this._rememberMe = value
-    }
-
-    public get isLoading() {
-        return this._isLoading
-    }
-
-    public set isLoading(value: boolean) {
-        this._isLoading = value
     }
 
     public getFileExtension = (file: File): string | undefined => {
@@ -76,9 +59,9 @@ export class UserRegisterPresenter {
       };
 
 
-    public async doRegister (firstName: string, lastName: string, alias: string, password: string, imageFileExtension: string) {
+    public async doRegister (firstName: string, lastName: string, alias: string, password: string, imageFileExtension: string, rememberMe: boolean) {
         try {
-            this._isLoading = true
+            this.view.setIsLoading(true)
       
             const [user, authToken] = await this.userService.register(
               firstName,
@@ -89,12 +72,12 @@ export class UserRegisterPresenter {
               imageFileExtension
             );
       
-            this.view.updateUserInfo(user, user, authToken, this._rememberMe);
+            this.view.updateUserInfo(user, user, authToken, rememberMe);
             this.view.navigate("/");
           } catch (error) {
             this.view.displayErrorMessage(`Failed to register user because of exception: ${error}`);
           } finally {
-            this._isLoading = false
+            this.view.setIsLoading(false)
           }
     }
 }

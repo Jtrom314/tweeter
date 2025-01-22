@@ -6,30 +6,22 @@ export interface UserLoginView {
     displayErrorMessage: (message: string) => void,
     updateUserInfo: (currentUser: User, displayedUser: User | null, authToken: AuthToken, remember: boolean) => void,
     navigate: NavigateFunction
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export class UserLoginPresenter {
     private userService: UserService;
     private view: UserLoginView
 
-    private _isLoading: boolean = false
 
     public constructor(view: UserLoginView) {
         this.view = view
         this.userService = new UserService()
     }
 
-    public get isLoading() {
-        return this._isLoading
-    }
-
-    public set isLoading(value: boolean) {
-        this._isLoading = value
-    }
-
     public async doLogin (alias: string, password: string, originalUrl: string | undefined, rememberMe: boolean) {
         try {
-            this._isLoading = true
+            this.view.setIsLoading(true)
             const [user, authToken] = await this.userService.login(alias, password);
             this.view.updateUserInfo(user, user, authToken, rememberMe)
             if (!!originalUrl) {
@@ -40,7 +32,7 @@ export class UserLoginPresenter {
         } catch (error) {
             this.view.displayErrorMessage(`Failed to log user in because of exception: ${error}`)
         } finally {
-            this._isLoading = false
+            this.view.setIsLoading(false)
         }
     };
 }

@@ -17,7 +17,7 @@ const Login = (props: Props) => {
   const [alias, setAlias] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const { updateUserInfo } = useUserInfo();
@@ -26,7 +26,8 @@ const Login = (props: Props) => {
   const listener: UserLoginView = {
     displayErrorMessage: displayErrorMessage,
     updateUserInfo: updateUserInfo,
-    navigate: navigate
+    navigate: navigate,
+    setIsLoading: setIsLoading
   }
 
   const [presenter] = useState(new UserLoginPresenter(listener))
@@ -66,7 +67,7 @@ const Login = (props: Props) => {
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
       setRememberMe={setRememberMe}
       submitButtonDisabled={checkSubmitButtonStatus}
-      isLoading={presenter.isLoading}
+      isLoading={isLoading}
       submit={ () => presenter.doLogin(alias, password, props?.originalUrl, rememberMe)}
     />
   );

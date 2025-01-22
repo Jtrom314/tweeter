@@ -28,6 +28,7 @@ const Register = () => {
       navigate: navigate,
       setImageUrl: setImageUrl,
       setImageFileExtension: setImageFileExtension,
+      setIsLoading: setIsLoading
   }
   
   const [presenter] = useState(new UserRegisterPresenter(listener))
@@ -45,7 +46,7 @@ const Register = () => {
 
   const registerOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && !checkSubmitButtonStatus()) {
-      presenter.doRegister(firstName, lastName, alias, password, imageFileExtension);
+      presenter.doRegister(firstName, lastName, alias, password, imageFileExtension, rememberMe);
     }
   };
 
@@ -116,7 +117,7 @@ const Register = () => {
       setRememberMe={setRememberMe}
       submitButtonDisabled={checkSubmitButtonStatus}
       isLoading={isLoading}
-      submit={() => presenter.doRegister(firstName, lastName, alias, password, imageFileExtension)}
+      submit={() => presenter.doRegister(firstName, lastName, alias, password, imageFileExtension, rememberMe)}
     />
   );
 };
