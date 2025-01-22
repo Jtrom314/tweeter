@@ -68,7 +68,7 @@ const Login = (props: Props) => {
       setRememberMe={setRememberMe}
       submitButtonDisabled={checkSubmitButtonStatus}
       isLoading={isLoading}
-      submit={ () => presenter.doLogin(alias, password, props?.originalUrl, rememberMe)}
+      submit={() => presenter.doLogin(alias, password, props?.originalUrl, rememberMe)}
     />
   );
 };
