@@ -27,35 +27,22 @@ export class UserService {
         return [user, FakeData.instance.authToken];
     };
 
-    public async getIsFollowerStatus (
-      authToken: AuthToken,
-      user: User,
-      selectedUser: User
-    ): Promise<boolean> {
+    public async getIsFollowerStatus (authToken: AuthToken, user: User, selectedUser: User): Promise<boolean> {
       // TODO: Replace with the result of calling server
       return FakeData.instance.isFollower();
     };
 
-    public async getFolloweeCount (
-      authToken: AuthToken,
-      user: User
-    ): Promise<number> {
+    public async getFolloweeCount (authToken: AuthToken, user: User): Promise<number> {
       // TODO: Replace with the result of calling server
       return FakeData.instance.getFolloweeCount(user.alias);
     };
 
-    public async getFollowerCount (
-      authToken: AuthToken,
-      user: User
-    ): Promise<number> {
+    public async getFollowerCount (authToken: AuthToken, user: User): Promise<number> {
       // TODO: Replace with the result of calling server
       return FakeData.instance.getFollowerCount(user.alias);
     };
 
-    public async follow (
-      authToken: AuthToken,
-      userToFollow: User
-    ): Promise<[followerCount: number, followeeCount: number]> {
+    public async follow (authToken: AuthToken, userToFollow: User): Promise<[followerCount: number, followeeCount: number]> {
       // Pause so we can see the follow message. Remove when connected to the server
       await new Promise((f) => setTimeout(f, 2000));
   
@@ -67,10 +54,7 @@ export class UserService {
       return [followerCount, followeeCount];
     };
 
-    public async unfollow (
-      authToken: AuthToken,
-      userToUnfollow: User
-    ): Promise<[followerCount: number, followeeCount: number]> {
+    public async unfollow (authToken: AuthToken,userToUnfollow: User): Promise<[followerCount: number, followeeCount: number]> {
       // Pause so we can see the unfollow message. Remove when connected to the server
       await new Promise((f) => setTimeout(f, 2000));
   
@@ -80,5 +64,15 @@ export class UserService {
       const followeeCount = await this.getFolloweeCount(authToken, userToUnfollow);
   
       return [followerCount, followeeCount];
+    };
+
+    public async getUser (authToken: AuthToken, alias: string): Promise<User | null> {
+      return FakeData.instance.findUserByAlias(alias);
+    }
+
+    
+    public async logout (authToken: AuthToken): Promise<void> {
+      // Pause so we can see the logging out message. Delete when the call to the server is implemented.
+      await new Promise((res) => setTimeout(res, 1000));
     };
 }
