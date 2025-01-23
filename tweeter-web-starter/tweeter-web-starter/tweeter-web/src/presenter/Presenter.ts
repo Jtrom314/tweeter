@@ -2,6 +2,15 @@ export interface View {
     displayErrorMessage: (message: string) => void
 }
 
+export interface DisplayView extends View {
+    clearLastInfoMessage: () => void,
+    displayInfoMessage: (message: string, duration: number, bootstrapClasses?: string) => void,
+}
+
+export interface DisplayLoadingView extends DisplayView {
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 export class Presenter<V extends View> {
     private _view: V
 

@@ -1,24 +1,17 @@
-import { NavigateFunction } from "react-router-dom";
 import { User, AuthToken } from "tweeter-shared";
-import { UserService } from "../model/service/userService";
 import { Buffer } from "buffer";
-import { View, Presenter } from "./Presenter";
+import { arugments, AuthenticatePresenter, AuthenticateView } from "./AuthenticatePresenter";
 
-export interface UserRegisterView extends View {
-    updateUserInfo: (currentUser: User, displayedUser: User | null, authToken: AuthToken, remember: boolean) => void,
-    navigate: NavigateFunction,
+export interface UserRegisterView extends AuthenticateView {
     setImageUrl: React.Dispatch<React.SetStateAction<string>>,
     setImageFileExtension:  React.Dispatch<React.SetStateAction<string>>,
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export class UserRegisterPresenter extends Presenter<UserRegisterView> {
-    private userService: UserService;
-    private _imageBytes: Uint8Array = new Uint8Array();
+export class UserRegisterPresenter extends AuthenticatePresenter<UserRegisterView> {
+    private _imageBytes: Uint8Array = new Uint8Array(); // Potiential source for bug. I pulled this from the component. check on this when you get to milestone 4A
 
     public constructor(view: UserRegisterView) {
         super(view)
-        this.userService = new UserService
     }
 
     public getFileExtension = (file: File): string | undefined => {
@@ -59,22 +52,24 @@ export class UserRegisterPresenter extends Presenter<UserRegisterView> {
 
 
     public async doRegister (firstName: string, lastName: string, alias: string, password: string, imageFileExtension: string, rememberMe: boolean) {
-      this.doFailureReportingOperation(async () => {
-        this.view.setIsLoading(true)
-  
-        const [user, authToken] = await this.userService.register(
-          firstName,
-          lastName,
-          alias,
-          password,
-          this._imageBytes,
-          imageFileExtension
-        );
-  
-        this.view.updateUserInfo(user, user, authToken, rememberMe);
-        this.view.navigate("/");
-      }, 'register user')
-      
-      this.view.setIsLoading(false)
+      const args = {
+        firstName,
+        lastName,
+        imageBytes: this._imageBytes,
+        imageFileExtension
+      }
+      this.doAuthenticate(alias, password, rememberMe, "/", args)
+    }
+
+    public async authenticate(alias: string, password: string, args: arugments): Promise<[User, AuthToken]> {
+      return await this.service.register(args.firstName!, args.lastName!, alias, password, args.imageBytes!, args.imageFileExtention!)
+    }
+
+    public navigateTo(destination: string | undefined): void {
+      this.view.navigate(destination!)
+    }
+
+    public getAuthenticationType(): string {
+      return 'register user'
     }
 }

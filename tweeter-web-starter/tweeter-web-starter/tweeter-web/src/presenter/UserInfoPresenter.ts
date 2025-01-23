@@ -1,14 +1,11 @@
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../model/service/userService";
-import { Presenter, View } from "./Presenter";
+import { DisplayLoadingView, Presenter } from "./Presenter";
 
-export interface UserInfoView extends View {
+export interface UserInfoView extends DisplayLoadingView {
     setIsFollower: React.Dispatch<React.SetStateAction<boolean>>,
     setFolloweeCount: React.Dispatch<React.SetStateAction<number>>,
     setFollowerCount: React.Dispatch<React.SetStateAction<number>>,
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    displayInfoMessage: (message: string, duration: number, bootstrapClasses?: string) => void,
-    clearLastInfoMessage:  () => void
 }
 
 export class UserInfoPresenter extends Presenter<UserInfoView> {
