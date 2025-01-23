@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-  ]
+, "test/__mocks__", "babel.config.js"  ]
 }
