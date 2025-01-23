@@ -1,32 +1,18 @@
-import { AuthToken, FakeData, Status } from "tweeter-shared";
-import { StatusService } from "../model/service/statusService";
-import { StatusItemPresenter, StatusItemView } from "./StatusItemPresenter";
+import { AuthToken } from "tweeter-shared";
+import { StatusItemPresenter } from "./StatusItemPresenter";
+import { PAGE_SIZE } from "./PageItemPresenter";
 
-export const PAGE_SIZE = 10;
 
 export class StoryPresenter extends StatusItemPresenter {
-    private statusService: StatusService;
-    public constructor(view: StatusItemView) {
-        super(view)
-        this.statusService = new StatusService()
+    public getItemDescription() {
+        return 'load story items'
     }
-
-    public async loadMoreItems (authToken: AuthToken, userAlias: string) {
-        try {
-            const [newItems, hasMore] = await this.statusService.loadMoreStoryItems(
-                authToken!,
-                userAlias,
-                PAGE_SIZE,
-                this.lastItem
-            );
-
-            this.hasMoreItems = hasMore
-            this.lastItem = newItems[newItems.length - 1]
-            this.view.addItems(newItems);
-        } catch (error) {
-            this.view.displayErrorMessage(
-                `Failed to load story items because of exception: ${error}`
-            );
-        }
-    };
+    public async getMoreItems(authToken: AuthToken, userAlias: string) {
+        return await this.service.loadMoreStoryItems(
+            authToken!,
+            userAlias,
+            PAGE_SIZE,
+            this.lastItem
+        );
+    }
 }

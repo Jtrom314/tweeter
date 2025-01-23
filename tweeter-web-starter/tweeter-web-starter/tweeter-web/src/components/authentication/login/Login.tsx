@@ -3,11 +3,11 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthenticationFormLayout from "../AuthenticationFormLayout";
-import { AuthToken, FakeData, User } from "tweeter-shared";
 import useToastListener from "../../toaster/ToastListenerHook";
 import AuthenticationFields from "../AuthFields/AuthenticationFields";
 import useUserInfo from "../../userInfo/UserInfoHook";
-import { UserLoginPresenter, UserLoginView } from "../../../presenter/UserLoginPresenter";
+import { UserLoginPresenter } from "../../../presenter/UserLoginPresenter";
+import { AuthenticateView } from "../../../presenter/AuthenticatePresenter";
 
 interface Props {
   originalUrl?: string;
@@ -23,7 +23,7 @@ const Login = (props: Props) => {
   const { updateUserInfo } = useUserInfo();
   const { displayErrorMessage } = useToastListener();
 
-  const listener: UserLoginView = {
+  const listener: AuthenticateView  = {
     displayErrorMessage: displayErrorMessage,
     updateUserInfo: updateUserInfo,
     navigate: navigate,
@@ -38,7 +38,7 @@ const Login = (props: Props) => {
 
   const loginOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && !checkSubmitButtonStatus()) {
-      presenter.doLogin(alias, password, props?.originalUrl, rememberMe)
+      presenter.doLogin(alias, password, rememberMe, props?.originalUrl)
     }
   };
 
@@ -68,7 +68,7 @@ const Login = (props: Props) => {
       setRememberMe={setRememberMe}
       submitButtonDisabled={checkSubmitButtonStatus}
       isLoading={isLoading}
-      submit={() => presenter.doLogin(alias, password, props?.originalUrl, rememberMe)}
+      submit={() => presenter.doLogin(alias, password, rememberMe, props?.originalUrl)}
     />
   );
 };
