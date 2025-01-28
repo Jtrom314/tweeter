@@ -11,6 +11,7 @@ import { AuthenticateView } from "../../../presenter/AuthenticatePresenter";
 
 interface Props {
   originalUrl?: string;
+  presenter?: UserLoginPresenter
 }
 
 const Login = (props: Props) => {
@@ -30,7 +31,7 @@ const Login = (props: Props) => {
     setIsLoading: setIsLoading
   }
 
-  const [presenter] = useState(new UserLoginPresenter(listener))
+  const [presenter] = useState(props.presenter ?? new UserLoginPresenter(listener))
 
   const checkSubmitButtonStatus = (): boolean => {
     return !alias || !password;
