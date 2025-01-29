@@ -1,6 +1,13 @@
 import { AuthToken, Status, FakeData } from "tweeter-shared";
+import { ServerFacade } from "../../network/ServerFacade";
 
 export class StatusService {
+    private facade: ServerFacade;
+
+    public constructor() {
+      this.facade = new ServerFacade()
+    }
+
     public async postStatus  (
         authToken: AuthToken,
         newStatus: Status
