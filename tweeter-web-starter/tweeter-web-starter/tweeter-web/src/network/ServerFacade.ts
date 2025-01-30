@@ -1,9 +1,20 @@
-import { PagedUserItemRequest, PagedUserItemResponse, Status, StatusDto, User, UserDto } from "tweeter-shared"
+import { PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterResponse, User, UserDto } from "tweeter-shared"
 import { ClientCommunicator } from "./ClientCommunicator"
 
 export class ServerFacade {
     private SERVER_URL = "https://4fnyxwtjtd.execute-api.us-east-1.amazonaws.com/dev"
     private clientCommunicator = new ClientCommunicator(this.SERVER_URL)
+
+    public async postStatus(request: PostStatusItemRequest): Promise<void> {
+        const response = await this.clientCommunicator.doPost<PostStatusItemRequest, TweeterResponse>(request, "/status/post")
+
+        if (response.success) {
+            return
+        } else {
+            console.error(response)
+            throw new Error(response.message!)
+        }
+    }
 
     public async getMoreFeedItems(request: PagedUserItemRequest<StatusDto>): Promise<[Status[], boolean]> {
         const response = await this.clientCommunicator.doPost<PagedUserItemRequest<StatusDto>, PagedUserItemResponse<StatusDto>>(request, "/feed/list")

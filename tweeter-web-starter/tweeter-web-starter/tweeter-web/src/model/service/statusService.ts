@@ -1,4 +1,4 @@
-import { AuthToken, Status, FakeData, PagedUserItemRequest, StatusDto } from "tweeter-shared";
+import { AuthToken, Status, FakeData, PagedUserItemRequest, StatusDto, PostStatusItemRequest } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
 export class StatusService {
@@ -12,10 +12,13 @@ export class StatusService {
         authToken: AuthToken,
         newStatus: Status
       ): Promise<void>{
-        // Pause so we can see the logging out message. Remove when connected to the server
-        await new Promise((f) => setTimeout(f, 2000));
 
-        // TODO: Call the server to post the status
+        const request: PostStatusItemRequest = {
+          token: authToken.token,
+          status: newStatus.dto
+        }
+
+        await this.facade.postStatus(request)
       };
       
     public async loadMoreStoryItems (
