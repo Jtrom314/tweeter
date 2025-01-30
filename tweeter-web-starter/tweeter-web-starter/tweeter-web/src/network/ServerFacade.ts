@@ -1,9 +1,22 @@
-import { PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto } from "tweeter-shared"
+import { GetUserRequest, GetUserResponse, PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto } from "tweeter-shared"
 import { ClientCommunicator } from "./ClientCommunicator"
 
 export class ServerFacade {
     private SERVER_URL = "https://4fnyxwtjtd.execute-api.us-east-1.amazonaws.com/dev"
     private clientCommunicator = new ClientCommunicator(this.SERVER_URL)
+
+    public async getUser(request: GetUserRequest): Promise<User | null> {
+        const response = await this.clientCommunicator.doPost<GetUserRequest, GetUserResponse>(request, "/user/getUser")
+
+        const user: User | null = response.success && response.userDto ? User.fromDto(response.userDto) : null
+
+        if (response.success) {
+            return user
+        } else {
+            console.error(response)
+            throw new Error(response.message!)
+        }
+    }
 
     public async logoutUser(request: TweeterRequest): Promise<void> {
         const response = await this.clientCommunicator.doPost<TweeterRequest, TweeterResponse>(request, "/user/logout")
