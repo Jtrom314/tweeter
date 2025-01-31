@@ -1,5 +1,5 @@
-import { TweeterRequest } from "./TweeterRequest";
+import { TweeterRequestToken } from "./TweeterRequestToken";
 
-export interface GetUserRequest extends TweeterRequest {
+export interface GetUserRequest extends TweeterRequestToken {
     readonly userAlias: string
 }

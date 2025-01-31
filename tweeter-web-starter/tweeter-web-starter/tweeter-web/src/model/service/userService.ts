@@ -1,5 +1,5 @@
 import { Buffer } from "buffer";
-import { User, AuthToken, FakeData, TweeterRequest, GetUserRequest, GeneralUserRequest } from "tweeter-shared";
+import { User, AuthToken, FakeData, TweeterRequest, GetUserRequest, GeneralUserRequest, LoginRequest } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
 export class UserService {
@@ -10,14 +10,12 @@ export class UserService {
     }
 
     public async login (alias: string, password: string): Promise<[User, AuthToken]>  {
-        // TODO: Replace with the result of calling the server
-        const user = FakeData.instance.firstUser;
-    
-        if (user === null) {
-          throw new Error("Invalid alias or password");
+        const request: LoginRequest = {
+          alias,
+          password
         }
-    
-        return [user, FakeData.instance.authToken];
+
+        return this.facade.loginUser(request)
     };
 
     public async register (firstName: string, lastName: string, alias: string, password: string, userImageBytes: Uint8Array, imageFileExtension: string): Promise<[User, AuthToken]> {
@@ -36,7 +34,12 @@ export class UserService {
 
     public async getIsFollowerStatus (authToken: AuthToken, user: User, selectedUser: User): Promise<boolean> {
       // TODO: Replace with the result of calling server
-      return FakeData.instance.isFollower();
+      const request: GeneralUserRequest = {
+        token: authToken.token,
+        user: user.dto,
+        addtionalUser: selectedUser.dto
+      }
+      return this.facade.getIsFollowerStatus(request)
     };
 
     public async getFolloweeCount (authToken: AuthToken, user: User): Promise<number> {

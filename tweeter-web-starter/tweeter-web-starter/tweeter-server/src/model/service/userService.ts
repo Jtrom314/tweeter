@@ -27,7 +27,7 @@ export class UserService {
         return [user, FakeData.instance.authToken];
     };
 
-    public async getIsFollowerStatus (authToken: AuthToken, user: User, selectedUser: User): Promise<boolean> {
+    public async getIsFollowerStatus (authToken: string, user: User, selectedUser: User): Promise<boolean> {
       // TODO: Replace with the result of calling server
       return FakeData.instance.isFollower();
     };
