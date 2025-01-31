@@ -10,6 +10,7 @@ export class FollowService {
         // TODO: Replace with the result of calling server
         return this.getFakeData(lastItem, pageSize, userAlias);
       };
+      
       public async loadMoreFollowees (
         authToken: string,
         userAlias: string,
