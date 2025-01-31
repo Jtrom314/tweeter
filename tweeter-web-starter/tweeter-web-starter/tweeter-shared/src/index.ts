@@ -24,6 +24,7 @@ export type { TweeterResponse } from "./model/net/response/TweeterResponse"
 export type { PagedUserItemResponse } from "./model/net/response/PagedUserItemResponse"
 export type { GetUserResponse } from "./model/net/response/GetUserResponse"
 export type { UserFolloweeFollowerResponse } from "./model/net/response/UserFolloweeFollowerResponse"
+export type { DualNumberResponse } from "./model/net/response/DualNumberResponse"
 
 // Other
 export { FakeData } from "./util/FakeData";

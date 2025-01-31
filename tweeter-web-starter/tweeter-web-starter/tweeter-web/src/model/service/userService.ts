@@ -58,27 +58,21 @@ export class UserService {
     };
 
     public async follow (authToken: AuthToken, userToFollow: User): Promise<[followerCount: number, followeeCount: number]> {
-      // Pause so we can see the follow message. Remove when connected to the server
-      await new Promise((f) => setTimeout(f, 2000));
+      const request: GeneralUserRequest = {
+        token: authToken.token,
+        user: userToFollow.dto
+      }
   
-      // TODO: Call the server
-  
-      const followerCount = await this.getFollowerCount(authToken, userToFollow);
-      const followeeCount = await this.getFolloweeCount(authToken, userToFollow);
-  
-      return [followerCount, followeeCount];
+      return this.facade.followUser(request)
     };
 
-    public async unfollow (authToken: AuthToken,userToUnfollow: User): Promise<[followerCount: number, followeeCount: number]> {
-      // Pause so we can see the unfollow message. Remove when connected to the server
-      await new Promise((f) => setTimeout(f, 2000));
+    public async unfollow (authToken: AuthToken, userToUnfollow: User): Promise<[followerCount: number, followeeCount: number]> {
+      const request: GeneralUserRequest = {
+        token: authToken.token,
+        user: userToUnfollow.dto
+      }
   
-      // TODO: Call the server
-  
-      const followerCount = await this.getFollowerCount(authToken, userToUnfollow);
-      const followeeCount = await this.getFolloweeCount(authToken, userToUnfollow);
-  
-      return [followerCount, followeeCount];
+      return this.facade.unfollowUser(request)
     };
 
     public async getUser (authToken: AuthToken, alias: string): Promise<User | null> {
