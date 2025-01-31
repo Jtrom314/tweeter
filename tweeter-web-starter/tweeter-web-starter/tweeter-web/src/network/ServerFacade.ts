@@ -1,9 +1,31 @@
-import { GetUserRequest, GetUserResponse, PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto } from "tweeter-shared"
+import { GeneralUserRequest, GetUserRequest, GetUserResponse, PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto, UserFolloweeFollowerResponse } from "tweeter-shared"
 import { ClientCommunicator } from "./ClientCommunicator"
 
 export class ServerFacade {
     private SERVER_URL = "https://4fnyxwtjtd.execute-api.us-east-1.amazonaws.com/dev"
     private clientCommunicator = new ClientCommunicator(this.SERVER_URL)
+
+    public async getFollowerCount(request: GeneralUserRequest): Promise<number> {
+        const response = await this.clientCommunicator.doPost<GeneralUserRequest, UserFolloweeFollowerResponse>(request, "/user/getFollowerCount")
+
+        if (response.success) {
+            return response.followNumber
+        } else {
+            console.error(response)
+            throw new Error(response.message!)
+        }
+    }
+
+    public async getFolloweeCount(request: GeneralUserRequest): Promise<number> {
+        const response = await this.clientCommunicator.doPost<GeneralUserRequest, UserFolloweeFollowerResponse>(request, "/user/getFolloweeCount")
+
+        if (response.success) {
+            return response.followNumber
+        } else {
+            console.error(response)
+            throw new Error(response.message!)
+        }
+    }
 
     public async getUser(request: GetUserRequest): Promise<User | null> {
         const response = await this.clientCommunicator.doPost<GetUserRequest, GetUserResponse>(request, "/user/getUser")
