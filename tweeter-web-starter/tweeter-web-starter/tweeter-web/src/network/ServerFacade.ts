@@ -1,9 +1,27 @@
-import { AuthResponse, AuthToken, BoolResponse, DualNumberResponse, GeneralUserRequest, GetUserRequest, GetUserResponse, LoginRequest, PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto, UserFolloweeFollowerResponse } from "tweeter-shared"
+import { AuthResponse, AuthToken, BoolResponse, DualNumberResponse, GeneralUserRequest, GetUserRequest, GetUserResponse, LoginRequest, PagedUserItemRequest, PagedUserItemResponse, PostStatusItemRequest, RegisterRequest, Status, StatusDto, TweeterRequest, TweeterResponse, User, UserDto, UserFolloweeFollowerResponse } from "tweeter-shared"
 import { ClientCommunicator } from "./ClientCommunicator"
 
 export class ServerFacade {
     private SERVER_URL = "https://4fnyxwtjtd.execute-api.us-east-1.amazonaws.com/dev"
     private clientCommunicator = new ClientCommunicator(this.SERVER_URL)
+
+    public async register(request: RegisterRequest): Promise<[User, AuthToken]> {
+        const response = await this.clientCommunicator.doPost<RegisterRequest, AuthResponse>(request, "/user/register")
+
+        const user = response.success && response.user != null ? User.fromDto(response.user) : null
+        const authToken = response.success && response.authToken != null ? AuthToken.fromDto(response.authToken) : null
+
+        if (response.success) {
+            if (user == null || authToken == null) {
+                throw new Error('User or Authtoken not found')
+            } else {
+                return [user, authToken]
+            }
+        } else {
+            console.error(response)
+            throw new Error(response.message!)
+        }
+    }
 
     public async loginUser(request: LoginRequest): Promise<[User, AuthToken]> {
         const response = await this.clientCommunicator.doPost<LoginRequest, AuthResponse>(request, "/user/login")

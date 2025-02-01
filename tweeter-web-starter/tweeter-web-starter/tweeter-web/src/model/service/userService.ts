@@ -1,5 +1,5 @@
 import { Buffer } from "buffer";
-import { User, AuthToken, FakeData, TweeterRequest, GetUserRequest, GeneralUserRequest, LoginRequest } from "tweeter-shared";
+import { User, AuthToken, FakeData, TweeterRequest, GetUserRequest, GeneralUserRequest, LoginRequest, RegisterRequest } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
 export class UserService {
@@ -21,15 +21,17 @@ export class UserService {
     public async register (firstName: string, lastName: string, alias: string, password: string, userImageBytes: Uint8Array, imageFileExtension: string): Promise<[User, AuthToken]> {
         // Not neded now, but will be needed when you make the request to the server in milestone 3
         const imageStringBase64: string = Buffer.from(userImageBytes).toString("base64");
-    
-        // TODO: Replace with the result of calling the server
-        const user = FakeData.instance.firstUser;
-    
-        if (user === null) {
-          throw new Error("Invalid registration");
+
+        const request: RegisterRequest = {
+          firstName,
+          lastName,
+          alias,
+          password,
+          imageFileExtension,
+          userImageBytes: imageStringBase64
         }
     
-        return [user, FakeData.instance.authToken];
+        return this.facade.register(request)
     };
 
     public async getIsFollowerStatus (authToken: AuthToken, user: User, selectedUser: User): Promise<boolean> {
@@ -57,7 +59,7 @@ export class UserService {
         token: authToken.token,
         user: user.dto
       }
-      return this.facade.getFolloweeCount(request)
+      return this.facade.getFollowerCount(request)
     };
 
     public async follow (authToken: AuthToken, userToFollow: User): Promise<[followerCount: number, followeeCount: number]> {

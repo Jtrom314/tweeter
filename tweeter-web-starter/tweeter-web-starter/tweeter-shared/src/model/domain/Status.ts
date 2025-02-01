@@ -288,7 +288,7 @@ export class Status {
     if (dto == null) {
       return null
     }
-    const user = new User(dto.user.firstName, dto.user.lastName, dto.user.alias, dto.user.imageUrl)
-    return new Status(dto.post, user, dto.timestamp)
+    console.log("status DTO: ", dto)
+    return new Status(dto.post, User.fromDto(dto.user)!, dto.timestamp)
   }
 }

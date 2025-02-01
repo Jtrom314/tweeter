@@ -32,7 +32,7 @@ export class StatusService {
           token: authToken.token,
           userAlias: userAlias,
           pageSize: pageSize,
-          lastItem: lastItem
+          lastItem: lastItem == null ? null : lastItem.dto
         }
         return this.facade.getMoreStoryItems(request);
       };
@@ -48,7 +48,7 @@ export class StatusService {
           token: authToken.token,
           userAlias: userAlias,
           pageSize: pageSize,
-          lastItem: lastItem
+          lastItem: lastItem == null ? null : lastItem.dto
         }
         return this.facade.getMoreFeedItems(request)
       };
