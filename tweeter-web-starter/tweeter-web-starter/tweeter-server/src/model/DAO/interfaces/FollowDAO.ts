@@ -1,5 +1,5 @@
 import { User } from "tweeter-shared"
-import { DataPage } from "../implementation/DAOImplementation"
+import { DataPage } from "../../DataPage"
 
 export interface FollowDAO {
     getIsFollower(user: User, selectedUser: User): Promise<boolean>

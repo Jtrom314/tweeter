@@ -42,7 +42,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
             
             const item = response.Item
     
-            return new User(item.firstName.S!, item.lastName.S!, item.alias.S!, item.profilePicture.S!)
+            return new User(item[this.firstNameField].S!, item[this.lastNameField].S!, item[this.aliasField].S!, item[this.profilePictureField].S!)
         }, "Get user")
     }
 
@@ -61,7 +61,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
                 return null
             }
 
-            const passwordToCompare = response.Item.hashedPassword.S!
+            const passwordToCompare = response.Item[this.hashedPasswordField].S!
 
             const isSame: boolean = await bcrypt.compare(password, passwordToCompare)
 
@@ -71,7 +71,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
             
             const item = response.Item
     
-            return new User(item.firstName.S!, item.lastName.S!, item.alias.S!, item.profilePicture.S!)
+            return new User(item[this.firstNameField].S!, item[this.lastNameField].S!, item[this.aliasField].S!, item[this.profilePictureField].S!)
         }, "Get user")
     }
 
@@ -127,7 +127,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
     
             const response = await this.client.send(command)
     
-            return Number(response.Item!.numFollowees.N)
+            return Number(response.Item![this.numFolloweesField].N)
         }, "Get followee count")
     }
 
@@ -143,7 +143,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
     
             const response = await this.client.send(command)
     
-            return Number(response.Item!.numFollowers.N)
+            return Number(response.Item![this.numFollowersField].N)
         }, "Get follower count")
     }
 }

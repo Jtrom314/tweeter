@@ -1,8 +1,9 @@
-import { DAOImplementation, DataPage } from "./DAOImplementation";
+import { DAOImplementation } from "./DAOImplementation";
 import { StatusDto } from "tweeter-shared";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { StoryDAO, StoryDTO } from "../interfaces/StoryDAO";
 import { QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DataPage } from "../../DataPage";
 
 export class StoryDAOImplementation extends DAOImplementation implements StoryDAO {
     async createStoryItem(status: StatusDto): Promise<void> {
@@ -43,9 +44,9 @@ export class StoryDAOImplementation extends DAOImplementation implements StoryDA
         const items: StoryDTO[] = []
         response!.Items?.forEach((item) => {
             items.push({
-                alias: item.alias.S ?? "",
-                timestamp: Number(item.timestamp.N) ?? 0,
-                post: item.post.S ?? ""
+                alias: item[this.aliasField].S ?? "",
+                timestamp: Number(item[this.timestampField]) ?? 0,
+                post: item[this.postField].S ?? ""
             })
         })
 

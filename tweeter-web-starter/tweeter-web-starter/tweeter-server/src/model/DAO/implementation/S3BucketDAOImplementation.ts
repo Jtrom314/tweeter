@@ -18,7 +18,9 @@ export class S3BucketDAOImplementation extends DAOImplementation implements S3Bu
             const c = new PutObjectCommand(s3Params)
             
             await client.send(c)
-            return `https://${ BUCKET }.s3.${ REGION }.amazonaws.com/image/${ fileName }`
+            const imagePath: string =  `https://${ BUCKET }.s3.${ REGION }.amazonaws.com/image/${ fileName }`
+            console.log("Image saved to path: ", imagePath)
+            return imagePath
         }, "S3 put image")
     }
 }

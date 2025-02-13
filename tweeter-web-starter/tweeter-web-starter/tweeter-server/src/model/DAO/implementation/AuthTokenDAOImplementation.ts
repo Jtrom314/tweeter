@@ -12,7 +12,7 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
                 TableName: this.authTable,
                 Item: {
                     [this.tokenField]: authToken.token,
-                    [this.timestampField]: authToken.timestamp.toString(),
+                    [this.timestampField]: authToken.timestamp,
                     [this.aliasField]: user.alias
                 }
             })
@@ -52,9 +52,11 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
             
             const item = response.Item
             
-            return item.alias.S!
+            return item[this.aliasField]!
         }, "Get alias by auth")
     }
+
+    // Ten minute authtoken expiration
     readonly expirationDuration = 10 * 60
     
     async validateAuth(tokenToRead: string): Promise<boolean> {
@@ -71,7 +73,7 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
             }
 
             const now: number = Math.floor(Date.now() / 1000)
-            const storedTimeStamp = Number(response.Item.timestamp.N)
+            const storedTimeStamp = response.Item[this.timestampField] as number
             if (now - storedTimeStamp > this.expirationDuration) {
                 await this.deleteAuth(tokenToRead)
                 return false
@@ -96,7 +98,7 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
                     "#ts": this.timestampField
                 },
                 ExpressionAttributeValues: {
-                    ":expirationDateTime" : futureTime.toString()
+                    ":expirationDateTime" : futureTime
                 }
             })
             await this.client.send(command)

@@ -28,7 +28,7 @@ export class Service {
         if (await this.validateToken(authToken)) {
             return await operation()
         } else {
-            throw new Error("Invalid token")
+            throw new Error("[Bad Request] Invalid token")
         }
     }
 }

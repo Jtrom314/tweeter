@@ -1,7 +1,7 @@
 import { Status, FakeData, StatusDto, User } from "tweeter-shared";
 import { Service } from "./Service";
-import { DataPage } from "../DAO/implementation/DAOImplementation";
 import { StoryDTO } from "../DAO/interfaces/StoryDAO";
+import { DataPage } from "../DataPage";
 
 export class StatusService extends Service {
     public async postStatus  (

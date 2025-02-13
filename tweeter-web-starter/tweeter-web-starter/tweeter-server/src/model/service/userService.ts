@@ -45,10 +45,13 @@ export class UserService extends Service {
         if (dbUser !== null) {
           throw new Error("Invalid registration")
         }
+        console.log("Creating user...")
         const profilePictureExtention = await this.s3DAO.createImageReference(userImageBytes, imageFileExtension)
         const user = await this.userDAO.createUser(firstName, lastName, alias, await this.hashPassword(password), profilePictureExtention)
-
+        console.log("User created")
+        console.log("Create authToken")
         const authToken = await this.authDAO.createAuth(user)
+        console.log("Authtoken created")
         return [user, authToken]
     };
 

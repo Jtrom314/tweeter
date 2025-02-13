@@ -1,8 +1,9 @@
 import { User } from "tweeter-shared";
 import { FollowDAO } from "../interfaces/FollowDAO";
-import { DAOImplementation, DataPage } from "./DAOImplementation";
+import { DAOImplementation } from "./DAOImplementation";
 import { DeleteCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { QueryCommand } from "@aws-sdk/client-dynamodb";
+import { DataPage } from "../../DataPage";
 
 export class FollowDAOImplementation extends DAOImplementation implements FollowDAO {
     async getIsFollower(user: User, selectedUser: User): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { StatusDto } from "tweeter-shared";
-import { DataPage } from "../implementation/DAOImplementation";
+import { DataPage } from "../../DataPage"
 
 export interface StoryDTO {
     readonly alias: string,

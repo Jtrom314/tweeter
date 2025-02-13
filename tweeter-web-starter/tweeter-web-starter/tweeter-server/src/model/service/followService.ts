@@ -1,6 +1,6 @@
 import { AuthToken, User, FakeData, UserDto } from "tweeter-shared";
-import { DataPage } from "../DAO/implementation/DAOImplementation";
 import { Service } from "./Service";
+import { DataPage } from "../DataPage";
 
 export class FollowService extends Service {
       public async loadMoreFollowers (

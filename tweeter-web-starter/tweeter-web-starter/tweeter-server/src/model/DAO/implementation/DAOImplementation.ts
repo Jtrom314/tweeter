@@ -1,16 +1,6 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 
-export class DataPage<T> {
-    values: T[]
-    hasMorePages: boolean
-
-    constructor(values: T[], hasMorePages: boolean) {
-        this.values = values
-        this.hasMorePages = hasMorePages
-    }
-}
-
 export class DAOImplementation {
     readonly client = DynamoDBDocumentClient.from(new DynamoDBClient())
 
@@ -40,7 +30,7 @@ export class DAOImplementation {
         try {
             return await operation()
         } catch (error) {
-            throw new Error(`${operationDescription} failed with: ${error}`)
+            throw new Error(`[Server Error] ${operationDescription} failed with: ${error}`)
         }
     }
 }
