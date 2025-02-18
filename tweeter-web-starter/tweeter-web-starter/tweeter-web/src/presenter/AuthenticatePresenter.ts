@@ -7,7 +7,7 @@ export interface arugments {
     firstName?: string,
     lastName?: string,
     imageBytes?: Uint8Array,
-    imageFileExtention?: string
+    imageFileExtension?: string
 }
 
 export interface AuthenticateView extends View {

@@ -19,7 +19,7 @@ export class UserService extends Service {
     
         // return [user, FakeData.instance.authToken];
 
-        const user: User | null = await this.userDAO.getUserByAliasPassword(alias, password)
+        const user: User | null = await this.userDAO.getUserByAliasPassword(this.formatAlias(alias), password)
 
         if (user == null) {
           throw new Error("Invalid alias or password")
@@ -40,18 +40,15 @@ export class UserService extends Service {
     
         // return [user, FakeData.instance.authToken];
 
-        const dbUser = await this.userDAO.getUserByAlias(alias)
+        const formattedAlias = this.formatAlias(alias)
+        const dbUser = await this.userDAO.getUserByAlias(formattedAlias)
 
         if (dbUser !== null) {
           throw new Error("Invalid registration")
         }
-        console.log("Creating user...")
-        const profilePictureExtention = await this.s3DAO.createImageReference(userImageBytes, imageFileExtension)
-        const user = await this.userDAO.createUser(firstName, lastName, alias, await this.hashPassword(password), profilePictureExtention)
-        console.log("User created")
-        console.log("Create authToken")
+        const profilePictureExtention = await this.s3DAO.createImageReference(userImageBytes, formattedAlias, imageFileExtension)
+        const user = await this.userDAO.createUser(firstName, lastName, formattedAlias, await this.hashPassword(password), profilePictureExtention)
         const authToken = await this.authDAO.createAuth(user)
-        console.log("Authtoken created")
         return [user, authToken]
     };
 
@@ -87,6 +84,7 @@ export class UserService extends Service {
 
       // Talk through the logic of this with Layton
       const baseUserAlias = await this.authDAO.getAliasByAuth(authToken)
+      await this.followDAO.followUser(baseUserAlias!, userToFollow.alias)
 
       await this.userDAO.updateFollowerCount(userToFollow.alias, 1)
       await this.userDAO.updateFolloweeCount(baseUserAlias!, 1)
@@ -104,6 +102,7 @@ export class UserService extends Service {
       // TODO: Call the server
 
       const baseUserAlias = await this.authDAO.getAliasByAuth(authToken)
+      await this.followDAO.unfollowUser(baseUserAlias!, userToUnfollow.alias)
 
       await this.userDAO.updateFollowerCount(userToUnfollow.alias, -1)
       await this.userDAO.updateFolloweeCount(baseUserAlias!, -1)
@@ -117,7 +116,8 @@ export class UserService extends Service {
     public async getUser (authToken: string, alias: string): Promise<User | null> {
       // return FakeData.instance.findUserByAlias(alias);
       return await this.validatedOperation<User | null>(authToken, async () => {
-        return await this.userDAO.getUserByAlias(alias)
+        const formattedAlias = this.formatAlias(alias)
+        return await this.userDAO.getUserByAlias(formattedAlias)
       })
     }
 

@@ -42,8 +42,8 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
             
             const item = response.Item
     
-            return new User(item[this.firstNameField].S!, item[this.lastNameField].S!, item[this.aliasField].S!, item[this.profilePictureField].S!)
-        }, "Get user")
+            return new User(item[this.firstNameField], item[this.lastNameField], item[this.aliasField], item[this.profilePictureField])
+        }, "Get user by alias")
     }
 
     async getUserByAliasPassword(alias: string, password: string): Promise<User | null> {
@@ -58,10 +58,17 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
             const response = await this.client.send(command)
     
             if (!response.Item) {
+                console.error(`No user found with alias: ${alias}`)
                 return null
             }
 
-            const passwordToCompare = response.Item[this.hashedPasswordField].S!
+            console.table(response.Item)
+
+            if (!response.Item[this.hashedPasswordField]) {
+                throw new Error("Stored password field is missing in the database.")
+            }
+
+            const passwordToCompare: string = response.Item[this.hashedPasswordField]
 
             const isSame: boolean = await bcrypt.compare(password, passwordToCompare)
 
@@ -71,7 +78,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
             
             const item = response.Item
     
-            return new User(item[this.firstNameField].S!, item[this.lastNameField].S!, item[this.aliasField].S!, item[this.profilePictureField].S!)
+            return new User(item[this.firstNameField], item[this.lastNameField], item[this.aliasField], item[this.profilePictureField])
         }, "Get user")
     }
 
@@ -127,7 +134,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
     
             const response = await this.client.send(command)
     
-            return Number(response.Item![this.numFolloweesField].N)
+            return Number(response.Item![this.numFolloweesField])
         }, "Get followee count")
     }
 
@@ -143,7 +150,7 @@ export class UserDAOImplementation extends DAOImplementation implements UserDAO 
     
             const response = await this.client.send(command)
     
-            return Number(response.Item![this.numFollowersField].N)
+            return Number(response.Item![this.numFollowersField])
         }, "Get follower count")
     }
 }

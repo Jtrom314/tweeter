@@ -11,7 +11,7 @@ export class StoryDAOImplementation extends DAOImplementation implements StoryDA
             const command = new PutCommand({
                 TableName: this.storyTable,
                 Item: {
-                    [this.authorField]: status.user.alias,
+                    [this.aliasField]: status.user.alias,
                     [this.timestampField]: status.timestamp,
                     [this.postField]: status.post
                 }
@@ -22,34 +22,37 @@ export class StoryDAOImplementation extends DAOImplementation implements StoryDA
     }
 
     async getPageOfStoryItems(alias: string, pageSize: number, lastTimeStamp: number | undefined): Promise<DataPage<StoryDTO>> {
-        const command = new QueryCommand({
-            TableName: this.storyTable,
-            Limit: pageSize,
-            KeyConditionExpression: "#alias = :alias",
-            ExpressionAttributeNames: {
-                "#alias": this.aliasField
-            },
-            ExpressionAttributeValues: {
-                ":alias": { S: alias }
-            },
-            ExclusiveStartKey: lastTimeStamp !== undefined ? {
-                [this.aliasField]: { S: alias },
-                [this.timestampField]: { N: lastTimeStamp.toString() }
-            } : undefined
-        })
-
-        const response = await this.client.send(command)
-        const hasMorePages = response.LastEvaluatedKey !== undefined
-
-        const items: StoryDTO[] = []
-        response!.Items?.forEach((item) => {
-            items.push({
-                alias: item[this.aliasField].S ?? "",
-                timestamp: Number(item[this.timestampField]) ?? 0,
-                post: item[this.postField].S ?? ""
+        return await this.doAWSOperation(async () => {
+            const command = new QueryCommand({
+                TableName: this.storyTable,
+                Limit: pageSize,
+                KeyConditionExpression: "#alias = :alias",
+                ScanIndexForward: false,
+                ExpressionAttributeNames: {
+                    "#alias": this.aliasField
+                },
+                ExpressionAttributeValues: {
+                    ":alias": { S: alias }
+                },
+                ExclusiveStartKey: lastTimeStamp !== undefined ? {
+                    [this.aliasField]: { S: alias },
+                    [this.timestampField]: { N: lastTimeStamp.toString() }
+                } : undefined
             })
-        })
-
-        return new DataPage<StoryDTO>(items, hasMorePages)
+    
+            const response = await this.client.send(command)
+            const hasMorePages = response.LastEvaluatedKey !== undefined
+    
+            const items: StoryDTO[] = []
+            response!.Items?.forEach((item) => {
+                items.push({
+                    alias: item[this.aliasField].S as string,
+                    timestamp: Number(item[this.timestampField].N),
+                    post: item[this.postField].S as string
+                })
+            })
+    
+            return new DataPage<StoryDTO>(items, hasMorePages)
+        }, "Get page of story items")
     }
 }

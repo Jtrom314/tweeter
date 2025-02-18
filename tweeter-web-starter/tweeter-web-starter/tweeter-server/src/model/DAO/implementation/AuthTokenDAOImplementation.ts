@@ -52,7 +52,7 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
             
             const item = response.Item
             
-            return item[this.aliasField]!
+            return item[this.aliasField]
         }, "Get alias by auth")
     }
 
@@ -73,7 +73,7 @@ export class AuthTokenDAOImplementation extends DAOImplementation implements Aut
             }
 
             const now: number = Math.floor(Date.now() / 1000)
-            const storedTimeStamp = response.Item[this.timestampField] as number
+            const storedTimeStamp = response.Item[this.timestampField]
             if (now - storedTimeStamp > this.expirationDuration) {
                 await this.deleteAuth(tokenToRead)
                 return false

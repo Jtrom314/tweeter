@@ -5,8 +5,9 @@ import { DAOImplementation } from "./DAOImplementation";
 
 const client = new S3Client({ region: REGION })
 export class S3BucketDAOImplementation extends DAOImplementation implements S3BucketDAO {
-    async createImageReference(userImageBytes: string, fileName: string): Promise<string> {
+    async createImageReference(userImageBytes: string, alias: string, imageFileExtention: string): Promise<string> {
         return await this.doAWSOperation(async () => {
+            const fileName = alias.slice(1) + imageFileExtention
             const decodedImageBuffer: Buffer = Buffer.from(userImageBytes, "base64")
             const s3Params = {
                 Bucket: BUCKET,

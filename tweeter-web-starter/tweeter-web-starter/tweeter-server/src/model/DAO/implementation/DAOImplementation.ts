@@ -11,6 +11,7 @@ export class DAOImplementation {
     readonly followTable = "Follow"
 
     readonly authorField = "author"
+    readonly ownerField = "owner"
     readonly timestampField = "timestamp"
     readonly tokenField = "token"
     readonly postField = "post"
