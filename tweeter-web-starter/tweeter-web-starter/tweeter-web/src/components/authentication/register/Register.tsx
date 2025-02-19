@@ -46,6 +46,14 @@ const Register = () => {
 
   const registerOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && !checkSubmitButtonStatus()) {
+      console.table ({
+        firstName,
+        lastName,
+        alias,
+        password,
+        imageFileExtension,
+        rememberMe
+      })
       presenter.doRegister(firstName, lastName, alias, password, imageFileExtension, rememberMe);
     }
   };

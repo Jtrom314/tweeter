@@ -23,12 +23,12 @@ export class Presenter<V extends View> {
     }
 
     protected async doFailureReportingOperation (operation: () => Promise<void>, operationDescription: string): Promise<void> {
-            try {
-                await operation()
-            } catch (error) {
-                this.view.displayErrorMessage(
-                   `Failed to ${operationDescription} because of exception: ${(error as Error).message}`
-                );
-            }
-        };
+        try {
+            await operation()
+        } catch (error) {
+            this.view.displayErrorMessage(
+                `Failed to ${operationDescription} because of exception: ${(error as Error).message}`
+            );
+        }
+    };
 }

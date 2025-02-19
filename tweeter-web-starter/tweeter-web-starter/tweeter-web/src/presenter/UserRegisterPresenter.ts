@@ -62,7 +62,7 @@ export class UserRegisterPresenter extends AuthenticatePresenter<UserRegisterVie
     }
 
     public async authenticate(alias: string, password: string, args: arugments): Promise<[User, AuthToken]> {
-      return await this.service.register(args.firstName!, args.lastName!, alias, password, args.imageBytes!, args.imageFileExtention!)
+      return await this.service.register(args.firstName!, args.lastName!, alias, password, args.imageBytes!, args.imageFileExtension!)
     }
 
     public navigateTo(destination: string | undefined): void {
